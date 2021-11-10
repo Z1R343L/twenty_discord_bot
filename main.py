@@ -26,7 +26,7 @@ emojis = {
 }
 
 
-async def fetch_endpoint(url: str, param: dict = {}) -> dict:
+async def fetch_endpoint(url: str, param: dict = None) -> dict:
     param['agent'] = 'discord'
     async with ClientSession() as session:
         async with session.get(url + urlencode(param)) as response:
@@ -90,10 +90,7 @@ class continue_select(disnake.ui.Select):
                 url = f"{baseurl}new_game?"
             case 'yes':
                 url = f"{baseurl}data?"
-        data = await fetch_endpoint(url=url, param={"id": inter.author.id, "name": inter.author.name})
-        # emb = inter.message.embeds[0]
-        # emb.description = f"score: {data['score']}"
-        # emb.set_image(url=data['image_url'])
+        data = await fetch_endpoint(url=url, param={"ID": inter.author.id, "name": inter.author.name})
         await inter.message.edit(file=disnake.File(data['image_path']), attachments=[], view=await play_view(possible_moves=data["possible_moves"], score=data['score'], name=inter.author.name))
 
 
@@ -135,7 +132,8 @@ async def scores(inter: disnake.ApplicationCommandInteraction) -> None:
 
 @bot.slash_command()
 async def play(inter: disnake.ApplicationCommandInteraction) -> None:
-    data = await fetch_endpoint(url=f"{baseurl}data?", param={"id": inter.author.id, "name": inter.author.name})
+    data = await fetch_endpoint(url=f"{baseurl}data?", param={"ID": str(inter.author.id), "name": inter.author.name})
+    print(data)
     if data["can_continue"] == 1:
         view = continue_select_view()
     else:
@@ -149,7 +147,7 @@ async def on_button_click(inter) -> None:
         await inter.message.delete()
         return
     c = ''
-    data = await fetch_endpoint(url=f"{baseurl}move?", param={"id": inter.author.id, "action": inter.component.custom_id})
+    data = await fetch_endpoint(url=f"{baseurl}move?", param={"ID": str(inter.author.id), "action": inter.component.custom_id})
     if data["possible_moves"]['over']:
         c = 'Game Over!'
     await inter.response.defer()
