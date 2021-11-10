@@ -7,3 +7,8 @@
 ![Libraries.io dependency status for GitHub repo](https://img.shields.io/librariesio/github/z1r343l/twenty_discord_bot?style=flat-square&logo=pypi&logoColor=white)
 ![disnake](https://img.shields.io/badge/disnake-upstreamGit-lightblue?logo=discord&logoColor=white&style=flat-square)
 ![PyPI](https://img.shields.io/pypi/v/uvloop?color=yellow&label=uvloop&logo=loop&logoColor=white&style=flat-square)
+
+## twenty_discory_bot
+this is a submodule of [project_twenty](https://github.com/Z1R343L/project_twenty)
+
+![preview](https://media.discordapp.net/attachments/808032919632347156/907862331646705734/6NPCnwDYNJ.gif)
