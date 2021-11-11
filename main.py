@@ -63,10 +63,7 @@ async def play_view(possible_moves: dict, score: int, name: str) -> disnake.ui.V
                     label=name, custom_id=btn, disabled=True, row=row_index
                 ))
             else:
-                if possible_moves[btn]:
-                    btn_move_disbaled = False
-                else:
-                    btn_move_disbaled = True
+                btn_move_disbaled = not possible_moves[btn]
                 view.add_item(
                         disnake.ui.Button(
                             emoji=emojis[btn], custom_id=btn, disabled=btn_move_disbaled, row=row_index
@@ -151,14 +148,8 @@ async def on_button_click(inter) -> None:
                 await inter.response.defer()
                 await inter.message.delete()
                 return
-            c = ''
             data = await fetch_endpoint(url=f"{baseurl}move?", param={"ID": inter.author.id, "action": inter.component.custom_id})
-            if data["possible_moves"]['over']:
-                c = 'Game Over!'
+            c = 'Game Over!' if data["possible_moves"]['over'] else ''
             await inter.edit_original_message(content=c, file=disnake.File(data['image_path']), attachments=[], view=await play_view(possible_moves=data["possible_moves"], score=data['score'], name=inter.author.name))
-        else:
-            pass
-    else:
-        pass
 
 bot.run(getenv("DISCORD_TOKEN"))
